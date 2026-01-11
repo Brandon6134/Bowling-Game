@@ -132,6 +132,8 @@ MonoBehaviour:
   rotateSpeed: 0.5
   bowlingBall: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
   bowlingBallSpeed: 300
+  spacePressed: 0
+  speedRounded: 100
 --- !u!54 &812249137931993841
 Rigidbody:
   m_ObjectHideFlags: 0

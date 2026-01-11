@@ -12,6 +12,9 @@ TagManager:
   - Velocity Bar
   - Past Pins Point
   - Alley Starting Point
+  - Velocity Bar Outline
+  - Help Text
+  - Start Throw
   layers:
   - Default
   - TransparentFX

@@ -16,6 +16,7 @@ public class SpawnManager : MonoBehaviour
 {
     private CameraControl cameraControlScript;
     private UIManager UIManagerScript;
+    private PlayerController playerControllerScript;
     public GameObject bowlingPinPrefab;
     public Dictionary<GameObject,Vector3> allPins;
     public Dictionary<GameObject,Vector3> currentPins;
@@ -59,6 +60,8 @@ public class SpawnManager : MonoBehaviour
         isGameActive = true;
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+
         Physics.gravity = new Vector3(0,-25f,0);
 
         //save initial player position for reset
@@ -151,12 +154,17 @@ public class SpawnManager : MonoBehaviour
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
 
-        //reset UI velocity bar variables
+        //enable help text if needed
+        playerControllerScript.SetHelpText();
 
+        //reset UI velocity bar variables
         UIManagerScript.tBar = 0;
         UIManagerScript.velocityBar.SetActive(false);
+        UIManagerScript.velocityBarOutline.SetActive(false);
+        UIManagerScript.ballSpeedText.enabled = false;
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
+        UIManagerScript.stopMovingVelocityBar = false;
     }
 
     //soft reset: bowling pins that were knocked down are deleted, remaining pins remain in regular spots
@@ -228,11 +236,17 @@ public class SpawnManager : MonoBehaviour
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
 
+        //enable help text if needed
+        playerControllerScript.SetHelpText();
+
         //reset UI velocity bar stuff
         UIManagerScript.tBar = 0;
         UIManagerScript.velocityBar.SetActive(false);
+        UIManagerScript.velocityBarOutline.SetActive(false);
+        UIManagerScript.ballSpeedText.enabled = false;
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
+        UIManagerScript.stopMovingVelocityBar = false;
         //}
     }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,7 +19,9 @@ public class PlayerController : MonoBehaviour
     private UIManager UIManagerScript;
     public bool spacePressed = false;
     private Rigidbody playerRb;
-    
+    public float speedRounded = 100f;
+    private bool throwAnimActive = false;
+    private float usedPercent = 0f;
 
     void Start()
     {
@@ -54,21 +57,27 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && !spacePressed)
             {
                 spacePressed=true;
-                playerAnim.SetInteger("Animation_int",5);
+                playerAnim.SetBool("Static_b",true);
+                playerAnim.SetFloat("Speed_f",0.5f);
             }
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
-            else if(Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed)
+            else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed && !throwAnimActive)
             {
                 //calculate percentage of bar full (0 to 1)
                 float barPercent = UIManagerScript.velocityBarRectTransform.sizeDelta[1] / UIManagerScript.maxYFixed;
 
                 //make the actual percent modifier range from 0.5 to 1 for speed balance
-                float usedPercent = 0.5f + barPercent/2;
+                usedPercent = 0.5f + barPercent/2;
 
                 //Debug.Log("barPercent: " + barPercent);
                 //Debug.Log("usedPercent: "+ usedPercent);
 
-                CreateAndMoveBall(usedPercent);
+                spacePressed = false;
+
+                //Debug.Log("start throw animation now!");
+                playerAnim.SetFloat("Speed_f",0f);
+                playerAnim.SetInteger("Animation_int",5);
+                throwAnimActive = true;
             }
             
             if (spacePressed)
@@ -138,26 +147,62 @@ public class PlayerController : MonoBehaviour
     {
         transform.Translate(Vector3.right * 2f *  Time.deltaTime,Space.World);
         playerAnim.speed=0.4f;
-        playerAnim.SetBool("Static_b",true);
-        playerAnim.SetFloat("Speed_f",0.5f);
+        UIManagerScript.helpText.enabled=false;
     }
 
-    private void CreateAndMoveBall(float percentModifier)
+    public void CreateAndMoveBall(float percentModifier)
     {
         GameObject bowlingClone = Instantiate(bowlingBall,gameObject.transform.position + camOffset,bowlingBall.transform.rotation);
         Rigidbody bowlingRb = bowlingClone.GetComponent<Rigidbody>();
 
         //add force to ball, with a mulitplier from the percentage of bar filled
-        bowlingRb.AddForce(transform.right * bowlingBallSpeed * percentModifier,ForceMode.Impulse);
-        spacePressed = false;
+        Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
+        bowlingRb.AddForce(force,ForceMode.Impulse);
+
+        UIManagerScript.ballSpeedText.enabled = true;
+
+        speedRounded = Mathf.Round(force[0])/10;
+        UIManagerScript.ballSpeedText.text = speedRounded + " km/h";
     }
 
     //if player reaches the start of alley, force ball throw with mininum ball speed mulitplier of 0.5
     void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Start Throw"))
+        {
+            //Debug.Log("start throw animation now!");
+            //playerAnim.SetFloat("Speed_f",0f);
+            //playerAnim.SetInteger("Animation_int",5);
+        }
+        
         if (other.CompareTag("Alley Starting Point"))
         {
-            CreateAndMoveBall(0.5f);
+            //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
+            usedPercent=0.5f;
+            spacePressed = false;
+            throwAnimActive = true;
+
+            //Debug.Log("start throw animation now!");
+            playerAnim.SetFloat("Speed_f",0f);
+            playerAnim.SetInteger("Animation_int",5);
         }
+    }
+
+    public void SetHelpText()
+    {
+        if (speedRounded < 30f)
+        {
+            UIManagerScript.helpText.enabled = true;
+        }
+    }
+
+    //once throw animation is complete, trigger this func and set throwAnimActive to false
+    public void EndOfThrowAnim()
+    {
+        throwAnimActive=false;
+        CreateAndMoveBall(usedPercent);
+
+        //disable the throw animation from occuring
+        playerAnim.SetInteger("Animation_int",0);
     }
 }
