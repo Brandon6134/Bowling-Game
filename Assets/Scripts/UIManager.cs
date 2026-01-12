@@ -58,13 +58,13 @@ public class UIManager : MonoBehaviour
     {
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar)
         {
-            VelocityBarChange(velocityBarRectTransform);
+            (tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
         }
         
         FadeOutAndStop();
     }
 
-    public void VelocityBarChange(RectTransform rect)
+    public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
     {
         velocityBar.SetActive(true);
         velocityBarOutline.SetActive(true);
@@ -86,6 +86,8 @@ public class UIManager : MonoBehaviour
             (minY,maxY) = (maxY,minY);
             tBar=0f;
         }
+
+        return (tBar,minY,maxY);
     }
 
     //at the end of each round, announce your score e.g. "9 pins" or "Spare" and play the corresponding sfx with it
