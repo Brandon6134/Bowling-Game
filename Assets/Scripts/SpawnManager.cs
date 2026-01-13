@@ -47,12 +47,12 @@ public class SpawnManager : MonoBehaviour
     private int globalRound = 1;
     public bool isGameActive = false;
     private bool pinsHaveMovedThisRound = false;
-    public TextMeshProUGUI gameOverText;
     private BowlingBallControl bowlingBallControlScript;
     public bool transitionCam_BallToPlayer=false;
     public bool callAnnounceScores;
     private bool resetInProgress = false;
     private bool allPinsSleepingLastFrame = false;
+    public GameObject GameOverParent;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -165,6 +165,9 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
+
+        //rest bool so velocity bar can move and controlled next round
+        playerControllerScript.spaceReleased = false;
     }
 
     //soft reset: bowling pins that were knocked down are deleted, remaining pins remain in regular spots
@@ -247,6 +250,9 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
+
+        //rest bool so velocity bar can move and controlled next round
+        playerControllerScript.spaceReleased = false;
         //}
     }
 
@@ -574,11 +580,9 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-
-
     public void GameOver()
     {
         isGameActive = false;
-        gameOverText.gameObject.SetActive(true);
+        GameOverParent.SetActive(true);
     }
 }

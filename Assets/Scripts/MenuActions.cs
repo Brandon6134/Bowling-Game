@@ -15,9 +15,7 @@ public class MenuActions : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        velocityBar = GameObject.FindGameObjectWithTag("Velocity Bar");
-        velocityBarRectTransform = velocityBar.GetComponent<RectTransform>();
-
+        mainMenuPanel.SetActive(true);
         howToPlayPanel.SetActive(false);
     }
 

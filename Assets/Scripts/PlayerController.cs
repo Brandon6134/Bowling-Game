@@ -18,9 +18,10 @@ public class PlayerController : MonoBehaviour
     private SpawnManager spawnManagerScript;
     private UIManager UIManagerScript;
     public bool spacePressed = false;
+    public bool spaceReleased = false;
     private Rigidbody playerRb;
     public float speedRounded = 100f;
-    private bool throwAnimActive = false;
+    public bool throwAnimActive = false;
     private float usedPercent = 0f;
 
     void Start()
@@ -53,8 +54,9 @@ public class PlayerController : MonoBehaviour
             //used Distance() to approximate equallness cause there was a delay between the two vector3's values making them equal after some time, not always.
             bool camBackOnPlayer = Vector3.Distance(cameraControlScript.transform.position,transform.position + cameraControlScript.playerOffset) < 0.1f;
 
-            //throw bowling ball only if none exist currently (only can throw one ball at a time), and if cam is on the player (not mid transition)
-            if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && !spacePressed)
+            // start move forward sequence if no balls exist currently (only can throw one ball at a time), if cam is on the player (not mid transition),
+            // and space hasn't been pressed down or released this round yet (or else can keep manipulating velocity bar several times in one round)
+            if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && !spacePressed && !spaceReleased)
             {
                 spacePressed=true;
                 playerAnim.SetBool("Static_b",true);
@@ -73,6 +75,7 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("usedPercent: "+ usedPercent);
 
                 spacePressed = false;
+                spaceReleased = true;
 
                 //Debug.Log("start throw animation now!");
                 playerAnim.SetFloat("Speed_f",0f);
