@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEditor;
 
 public class UIManager : MonoBehaviour
 {
@@ -56,7 +57,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerControllerScript.spacePressed && !stopMovingVelocityBar)
+        //if space is pressed down, velocity bar should be moving still, and game isnt paused
+        if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {
             (tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
         }

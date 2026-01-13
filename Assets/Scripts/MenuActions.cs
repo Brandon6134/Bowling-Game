@@ -7,6 +7,7 @@ public class MenuActions : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject howToPlayPanel;
+    public GameObject pauseButton;
     public GameObject velocityBar;
     public RectTransform velocityBarRectTransform;
     private float t = 0f;
@@ -15,7 +16,7 @@ public class MenuActions : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mainMenuPanel.SetActive(true);
+        //mainMenuPanel.SetActive(true);
         howToPlayPanel.SetActive(false);
     }
 
@@ -31,6 +32,7 @@ public class MenuActions : MonoBehaviour
     public void LoadGameScene(int sceneID)
     {
         SceneManager.LoadScene(sceneID);
+        Time.timeScale = 1;
     }
 
     public void HowToPlayButton()
@@ -45,14 +47,32 @@ public class MenuActions : MonoBehaviour
         mainMenuPanel.SetActive(true);
     }
 
+    public void PauseMenuButton()
+    {
+        mainMenuPanel.SetActive(true);
+        pauseButton.SetActive(false);
+
+        //pause game and its time
+        Time.timeScale = 0;
+    }
+
+    public void ResumeButton()
+    {
+        mainMenuPanel.SetActive(false);
+        pauseButton.SetActive(true);
+
+        //unpause game and its time
+        Time.timeScale = 1;
+    }
+
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input
     public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
     {
         //change rectangle height
         rect.sizeDelta = new (100, Mathf.Lerp(minY,maxY,tBar));
 
-        //increase the t value over time, so when this function is called again in Update() Mathf.Lerp returns higher pos values, eventually reaching end pos
-        tBar+=1.1f*Time.deltaTime;
+        //increase t overtime, multiply by unscaledDeltaTime so even game is paused (time.timeScale=0) it still scales with time (exclusive for UI)
+        tBar+=1.1f*Time.unscaledDeltaTime;
 
         //if t=1 then bar has reached max or min size, thus switch the min and max so it starts increasing or decreasing size appropriately
         if (tBar>=1)

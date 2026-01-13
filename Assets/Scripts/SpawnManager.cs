@@ -18,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     private UIManager UIManagerScript;
     private PlayerController playerControllerScript;
     public GameObject bowlingPinPrefab;
+    public GameObject pauseMenu;
     public Dictionary<GameObject,Vector3> allPins;
     public Dictionary<GameObject,Vector3> currentPins;
     public Dictionary<GameObject,Vector3> roundStartPins;
@@ -584,5 +585,6 @@ public class SpawnManager : MonoBehaviour
     {
         isGameActive = false;
         GameOverParent.SetActive(true);
+        pauseMenu.SetActive(false);
     }
 }
