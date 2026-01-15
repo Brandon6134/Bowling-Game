@@ -8,14 +8,39 @@ public class BowlingBallControl : MonoBehaviour
     private Rigidbody ballRb;
     public bool isBallFrozen=false;
     public bool isBallPastPins=false;
+    private PlayerController playerControllerScript;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+
         ballRb = GetComponent<Rigidbody>();
         //require 2 audio sources for handling each audiosource/clip
         audioSource = GetComponents<AudioSource>()[0]; //use this audiosource to play the oneshot AudioClip of pinHit
         ballRolling = GetComponents<AudioSource>()[1]; //use this audiosource to continously play the ballRolling audio
+
+        ballRb = GetComponent<Rigidbody>();
+
+        
+    }
+
+    void FixedUpdate()
+    {
+        float hookStrength = -0.8f;
+
+        //float forwardSpeed = Vector3.Dot(ballRb.linearVelocity, transform.forward);
+        
+        float spinY = ballRb.angularVelocity.y;
+
+        print(spinY);
+
+        //Vector3 hookforce = playerControllerScript.hookDirection * spinY * forwardSpeed * hookStrength;
+
+        //print(playerControllerScript.hookDirection);
+
+        ballRb.AddForce(spinY*Vector3.forward*hookStrength,ForceMode.Impulse);
+
     }
 
     void OnCollisionEnter(Collision collision)

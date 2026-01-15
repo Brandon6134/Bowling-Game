@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public float speedRounded = 100f;
     public bool throwAnimActive = false;
     private float usedPercent = 0f;
+    public Vector3 hookDirection;
 
     void Start()
     {
@@ -161,6 +162,10 @@ public class PlayerController : MonoBehaviour
         //add force to ball, with a mulitplier from the percentage of bar filled
         Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
         bowlingRb.AddForce(force,ForceMode.Impulse);
+        
+        bowlingRb.AddTorque(Vector3.up * 5f,ForceMode.Impulse);
+
+        hookDirection = Vector3.Cross(Vector3.up,bowlingRb.linearVelocity).normalized;
 
         UIManagerScript.ballSpeedText.enabled = true;
 
@@ -170,14 +175,7 @@ public class PlayerController : MonoBehaviour
 
     //if player reaches the start of alley, force ball throw with mininum ball speed mulitplier of 0.5
     void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Start Throw"))
-        {
-            //Debug.Log("start throw animation now!");
-            //playerAnim.SetFloat("Speed_f",0f);
-            //playerAnim.SetInteger("Animation_int",5);
-        }
-        
+    {  
         if (other.CompareTag("Alley Starting Point"))
         {
             //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
