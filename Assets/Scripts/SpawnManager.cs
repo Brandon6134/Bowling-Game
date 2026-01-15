@@ -173,6 +173,7 @@ public class SpawnManager : MonoBehaviour
         {
             obj.SetActive(false);
         }
+        UIManagerScript.torqueSpeedText.enabled = false;
 
         //rest bool so velocity bar can move and controlled next round
         playerControllerScript.spaceReleased = false;
@@ -268,6 +269,7 @@ public class SpawnManager : MonoBehaviour
         {
             obj.SetActive(false);
         }
+        UIManagerScript.torqueSpeedText.enabled = false;
 
         //rest bool so velocity bar can move and controlled next round
         playerControllerScript.spaceReleased = false;

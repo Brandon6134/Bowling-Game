@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public AudioClip[] announcePinsHitSFX;
     public TextMeshProUGUI ballSpeedText;
     public TextMeshProUGUI helpText;
+    public TextMeshProUGUI torqueSpeedText;
     public GameObject[] spinUI;
     private float t=0;
     public float tBar=0;
@@ -29,8 +30,8 @@ public class UIManager : MonoBehaviour
     public float minY = 0f;
     public float maxY = 700f;
     public bool stopMovingVelocityBar = false;
-    private float minSpinY = 100f+960f;
-    private float maxSpinY = 930f+960f;
+    private float minSpinX = 100f+960f;
+    private float maxSpinX = 930f+960f;
     public float speedOfSpinIndicator;
     public Vector3 spinIndicatorBasePosition;
 
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
         velocityBarOutline.SetActive(false);
         
         ballSpeedText.enabled = false;
+        torqueSpeedText.enabled=false;
 
         helpText.outlineColor = Color.black;
         helpText.outlineWidth = 0.15f;
@@ -74,7 +76,7 @@ public class UIManager : MonoBehaviour
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {
             (tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
-            SpinGaugeChange(spinUI,minSpinY,maxSpinY);
+            SpinGaugeChange(spinUI,minSpinX,maxSpinX);
         }
         
         FadeOutAndStop();
@@ -111,6 +113,17 @@ public class UIManager : MonoBehaviour
         foreach (GameObject obj in objarray)
         {
             obj.SetActive(true);
+        }
+
+        //don't allow player to move outside bowling lane
+        if (objarray[0].transform.position.x < min)
+        {
+            objarray[0].transform.position = new Vector3(min,objarray[0].transform.position.y,objarray[0].transform.position.z);
+        }
+
+        if (objarray[0].transform.position.x > max)
+        {
+            objarray[0].transform.position = new Vector3(max,objarray[0].transform.position.y,objarray[0].transform.position.z);
         }
         
         float horizontalInput = Input.GetAxis("Horizontal");

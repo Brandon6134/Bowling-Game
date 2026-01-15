@@ -31,7 +31,7 @@ public class CameraControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //if game is active, allow all the camera controls
         if (spawnManagerScript.isGameActive)

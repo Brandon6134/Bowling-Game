@@ -25,13 +25,20 @@ public class PlayerController : MonoBehaviour
     private float usedPercent = 0f;
     public bool throwInProgress = false;
     private float spinStrength = 0f;
+    public float spinStrengthModifier;
 
     void Start()
     {
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
-        playerAnim = GetComponent<Animator>();
+
+        //grab all animators from children objects
+        Animator[] animators = gameObject.GetComponentsInChildren<Animator>();
+
+        //set our animator to the first children object (animates actual player model, not parent object)
+        playerAnim = animators[0];
+
         playerRb = GetComponent<Rigidbody>();
 
 
@@ -75,9 +82,12 @@ public class PlayerController : MonoBehaviour
                 //make the actual percent modifier range from 0.5 to 1 for speed balance
                 usedPercent = 0.5f + barPercent/2;
 
+                //width of one arrow in the x-axis
                 float num = 515f;
 
-                spinStrength= (UIManagerScript.spinUI[0].transform.position.x - UIManagerScript.spinIndicatorBasePosition.x)/num * 10;
+                //subtract the original x position (middle) from the green indicator position.x, divide by width of an arrow to get a 
+                //a percentage from -1 to 1, negative being spin left and positive being spin right. multiply by 10 or wtv for extra spin power
+                spinStrength= (UIManagerScript.spinUI[0].transform.position.x - UIManagerScript.spinIndicatorBasePosition.x)/num * spinStrengthModifier;
 
                 spacePressed = false;
                 spaceReleased = true;
@@ -113,9 +123,10 @@ public class PlayerController : MonoBehaviour
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
         transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
+        print(horizontalInput);
 
         //set moving animation for player
-        if (horizontalInput!=0)
+        if (horizontalInput != 0f)
         {
             playerAnim.SetBool("Static_b",true);
             playerAnim.SetFloat("Speed_f",0.5f);
@@ -167,12 +178,18 @@ public class PlayerController : MonoBehaviour
         Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
         bowlingRb.AddForce(force,ForceMode.Impulse);
         
-        bowlingRb.AddTorque(Vector3.up * spinStrength,ForceMode.Impulse);
+        Vector3 torqueForce = Vector3.up * spinStrength;
+        bowlingRb.AddTorque(torqueForce,ForceMode.Impulse);
 
         UIManagerScript.ballSpeedText.enabled = true;
+        UIManagerScript.torqueSpeedText.enabled = true;
 
         speedRounded = Mathf.Round(force[0])/10;
         UIManagerScript.ballSpeedText.text = speedRounded + " km/h";
+        
+        //round and multiply by 50 to get nice "accurate" RPM numbers
+        float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*75));
+        UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " RPM";
     }
 
     //if player reaches the start of alley, force ball throw with mininum ball speed mulitplier of 0.5
@@ -207,5 +224,6 @@ public class PlayerController : MonoBehaviour
 
         //disable the throw animation from occuring
         playerAnim.SetInteger("Animation_int",0);
+        playerAnim.speed=1f;
     }
 }
