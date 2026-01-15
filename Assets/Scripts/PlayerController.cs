@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour
     public float speedRounded = 100f;
     public bool throwAnimActive = false;
     private float usedPercent = 0f;
-    public Vector3 hookDirection;
+    public bool throwInProgress = false;
+    private float spinStrength = 0f;
 
     void Start()
     {
@@ -45,7 +46,8 @@ public class PlayerController : MonoBehaviour
         if (spawnManagerScript.isGameActive)
         {
             //if camera isn't on the scoreboard, allow player movement (when player exits scoreboard, can immediately move so feels nice and not restrictve)
-            if (!cameraControlScript.camOnScores)
+            //also if isnt in the moveforward sequence or throwing animation
+            if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress)
             {
                 horizontalMovement();
                 rotationalMovement();
@@ -60,6 +62,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && !spacePressed && !spaceReleased)
             {
                 spacePressed=true;
+                throwInProgress=true;
                 playerAnim.SetBool("Static_b",true);
                 playerAnim.SetFloat("Speed_f",0.5f);
             }
@@ -72,8 +75,9 @@ public class PlayerController : MonoBehaviour
                 //make the actual percent modifier range from 0.5 to 1 for speed balance
                 usedPercent = 0.5f + barPercent/2;
 
-                //Debug.Log("barPercent: " + barPercent);
-                //Debug.Log("usedPercent: "+ usedPercent);
+                float num = 515f;
+
+                spinStrength= (UIManagerScript.spinUI[0].transform.position.x - UIManagerScript.spinIndicatorBasePosition.x)/num * 10;
 
                 spacePressed = false;
                 spaceReleased = true;
@@ -154,7 +158,7 @@ public class PlayerController : MonoBehaviour
         UIManagerScript.helpText.enabled=false;
     }
 
-    public void CreateAndMoveBall(float percentModifier)
+    public void CreateAndMoveBall(float percentModifier, float spinStrength)
     {
         GameObject bowlingClone = Instantiate(bowlingBall,gameObject.transform.position + camOffset,bowlingBall.transform.rotation);
         Rigidbody bowlingRb = bowlingClone.GetComponent<Rigidbody>();
@@ -163,9 +167,7 @@ public class PlayerController : MonoBehaviour
         Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
         bowlingRb.AddForce(force,ForceMode.Impulse);
         
-        bowlingRb.AddTorque(Vector3.up * 5f,ForceMode.Impulse);
-
-        hookDirection = Vector3.Cross(Vector3.up,bowlingRb.linearVelocity).normalized;
+        bowlingRb.AddTorque(Vector3.up * spinStrength,ForceMode.Impulse);
 
         UIManagerScript.ballSpeedText.enabled = true;
 
@@ -201,7 +203,7 @@ public class PlayerController : MonoBehaviour
     public void EndOfThrowAnim()
     {
         throwAnimActive=false;
-        CreateAndMoveBall(usedPercent);
+        CreateAndMoveBall(usedPercent,spinStrength);
 
         //disable the throw animation from occuring
         playerAnim.SetInteger("Animation_int",0);

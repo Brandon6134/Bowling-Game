@@ -28,19 +28,8 @@ public class BowlingBallControl : MonoBehaviour
     void FixedUpdate()
     {
         float hookStrength = -0.8f;
-
-        //float forwardSpeed = Vector3.Dot(ballRb.linearVelocity, transform.forward);
-        
         float spinY = ballRb.angularVelocity.y;
-
-        print(spinY);
-
-        //Vector3 hookforce = playerControllerScript.hookDirection * spinY * forwardSpeed * hookStrength;
-
-        //print(playerControllerScript.hookDirection);
-
         ballRb.AddForce(spinY*Vector3.forward*hookStrength,ForceMode.Impulse);
-
     }
 
     void OnCollisionEnter(Collision collision)

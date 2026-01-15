@@ -167,8 +167,18 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
 
+        //reset UI spin gauge variable
+        UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
+        foreach (GameObject obj in UIManagerScript.spinUI)
+        {
+            obj.SetActive(false);
+        }
+
         //rest bool so velocity bar can move and controlled next round
         playerControllerScript.spaceReleased = false;
+
+        //allow player horizontal movement again
+        playerControllerScript.throwInProgress = false;
     }
 
     //soft reset: bowling pins that were knocked down are deleted, remaining pins remain in regular spots
@@ -252,8 +262,18 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
 
+        //reset UI spin gauge variable
+        UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
+        foreach (GameObject obj in UIManagerScript.spinUI)
+        {
+            obj.SetActive(false);
+        }
+
         //rest bool so velocity bar can move and controlled next round
         playerControllerScript.spaceReleased = false;
+
+        //allow player horizontal movement again
+        playerControllerScript.throwInProgress = false;
         //}
     }
 

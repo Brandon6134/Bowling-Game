@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public AudioClip[] announcePinsHitSFX;
     public TextMeshProUGUI ballSpeedText;
     public TextMeshProUGUI helpText;
+    public GameObject[] spinUI;
     private float t=0;
     public float tBar=0;
     private int minA = 0;
@@ -28,6 +29,10 @@ public class UIManager : MonoBehaviour
     public float minY = 0f;
     public float maxY = 700f;
     public bool stopMovingVelocityBar = false;
+    private float minSpinY = 100f+960f;
+    private float maxSpinY = 930f+960f;
+    public float speedOfSpinIndicator;
+    public Vector3 spinIndicatorBasePosition;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,6 +56,14 @@ public class UIManager : MonoBehaviour
         helpText.outlineColor = Color.black;
         helpText.outlineWidth = 0.15f;
         helpText.enabled = false;
+
+        spinIndicatorBasePosition = spinUI[0].transform.position;
+
+        //set all spinUI objects inactive
+        foreach (GameObject obj in spinUI)
+        {
+            obj.SetActive(false);
+        }
         
     }
 
@@ -61,6 +74,7 @@ public class UIManager : MonoBehaviour
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {
             (tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
+            SpinGaugeChange(spinUI,minSpinY,maxSpinY);
         }
         
         FadeOutAndStop();
@@ -90,6 +104,22 @@ public class UIManager : MonoBehaviour
         }
 
         return (tBar,minY,maxY);
+    }
+
+    public float SpinGaugeChange(GameObject[] objarray, float min, float max)
+    {
+        foreach (GameObject obj in objarray)
+        {
+            obj.SetActive(true);
+        }
+        
+        float horizontalInput = Input.GetAxis("Horizontal");
+        
+        //translate green indicator left and right based on user horizontal input
+        objarray[0].transform.Translate(Vector3.left * speedOfSpinIndicator * horizontalInput *  Time.deltaTime);
+
+
+        return max;
     }
 
     //at the end of each round, announce your score e.g. "9 pins" or "Spare" and play the corresponding sfx with it

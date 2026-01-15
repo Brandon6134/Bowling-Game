@@ -357,4 +357,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 289e10d896bc39d42a1817f44a9d706e, type: 3}
   - {fileID: 8300000, guid: f7c8e6026d209f4458715d563ab5f86a, type: 3}
   isBallFrozen: 0
-  isBallPastMidwayPoint: 0
+  isBallPastPins: 0
