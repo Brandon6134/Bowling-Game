@@ -3570,6 +3570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuActions
   mainMenuPanel: {fileID: 4118671423071468157}
   howToPlayPanel: {fileID: 793820175}
+  customizePanel: {fileID: 0}
   pauseButton: {fileID: 201284931}
   velocityBar: {fileID: 1504021191}
   velocityBarRectTransform: {fileID: 1504021192}
@@ -5708,7 +5709,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988582754}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8f317a13048791546b1284a6a0dbfa7e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -7482,6 +7483,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bowling Ball Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4560324335583799208, guid: 5a1dc873dab7c794eae78fec4e28d631, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6166109361599987211, guid: 5a1dc873dab7c794eae78fec4e28d631, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.76
@@ -7522,7 +7527,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6778050256821045293, guid: 5a1dc873dab7c794eae78fec4e28d631, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6778050256821045293, guid: 5a1dc873dab7c794eae78fec4e28d631, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -14192,9 +14202,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7229050953605335326}
   serializedVersion: 5
-  m_Mass: 100
+  m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -14302,9 +14312,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1857c6684bce1084583882989db082d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  speed: 8
+  speed: 10
   zRange: 6
-  rotateSpeed: 0.2
+  rotateYRange: 45
+  rotateSpeed: 0.05
   bowlingBall: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
   bowlingBallSpeed: 400
   spacePressed: 0

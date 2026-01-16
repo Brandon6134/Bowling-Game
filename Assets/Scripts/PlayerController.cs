@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     public float speed;
     public float zRange;
-    private float rotateYRange = 0.5f;
+    public float rotateYRange = 0.5f;
     public float rotateSpeed;
     public GameObject bowlingBall;
     public float bowlingBallSpeed;
@@ -122,7 +122,8 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
-        transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
+        //transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
+        playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
 
         //set moving animation for player
         if (horizontalInput != 0f)
@@ -140,6 +141,8 @@ public class PlayerController : MonoBehaviour
     void rotationalMovement()
     {
         //don't allow player to rotate past the rotation limits (approx 60 degrees)
+
+        /*
         if (transform.rotation.y < -rotateYRange)
         {
             transform.rotation = new Quaternion(transform.rotation.x,-rotateYRange,transform.rotation.z,transform.rotation.w);
@@ -149,15 +152,41 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = new Quaternion(transform.rotation.x,rotateYRange,transform.rotation.z,transform.rotation.w);
         }
+        */
 
+        //eulerAngles is a value from 0-360
+        float yAngle = playerRb.rotation.eulerAngles.y;
+
+        //convert yAngle from 0-360 to -180 to 180 (so can account for -45 and +45 degree rotation ranges)
+        if (yAngle > 180f)
+            yAngle -= 360f;
+
+        //use clamp to return value if within min and max range, otherwise return min or max (if value exceeds them)
+        float clampedY = Mathf.Clamp(yAngle,-rotateYRange,rotateYRange);
+
+        //if player angle reaches +/- 45 degrees, prevent them from rotating any further
+        if (Mathf.Approximately(clampedY,rotateYRange))
+        {
+            playerRb.angularVelocity = Vector3.zero;
+            playerRb.MoveRotation(Quaternion.Euler(0,45,0));
+        }
+
+        else if (Mathf.Approximately(clampedY,-rotateYRange))
+        {
+            playerRb.angularVelocity = Vector3.zero;
+            playerRb.MoveRotation(Quaternion.Euler(0,-45,0));
+        }
+    
         //allow player to rotate with Q and E buttons
         if (Input.GetKey(KeyCode.Q))
         {
-            transform.Rotate(0,-rotateSpeed,0);
+            //transform.Rotate(0,-rotateSpeed,0);
+            playerRb.AddTorque(0,-rotateSpeed,0,ForceMode.Impulse);
         }
         if (Input.GetKey(KeyCode.E))
         {
-            transform.Rotate(0,rotateSpeed,0);
+            //transform.Rotate(0,rotateSpeed,0);
+            playerRb.AddTorque(0,rotateSpeed,0,ForceMode.Impulse);
         }
     }
 
