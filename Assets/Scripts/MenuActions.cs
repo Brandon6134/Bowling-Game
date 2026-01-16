@@ -2,11 +2,13 @@ using System.Runtime.CompilerServices;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuActions : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject howToPlayPanel;
+    public GameObject customizePanel;
     public GameObject pauseButton;
     public GameObject velocityBar;
     public RectTransform velocityBarRectTransform;
@@ -63,6 +65,18 @@ public class MenuActions : MonoBehaviour
 
         //unpause game and its time
         Time.timeScale = 1;
+    }
+
+    public void CustomizeButton()
+    {
+        mainMenuPanel.SetActive(false);
+        customizePanel.SetActive(true);
+    }
+    
+    public void ToggleOutline(Outline outline)
+    {
+        outline.effectColor = Color.yellow;
+        outline.effectDistance = new Vector2(10,10);
     }
 
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input

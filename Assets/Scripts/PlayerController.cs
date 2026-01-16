@@ -123,7 +123,6 @@ public class PlayerController : MonoBehaviour
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
         transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
-        print(horizontalInput);
 
         //set moving animation for player
         if (horizontalInput != 0f)

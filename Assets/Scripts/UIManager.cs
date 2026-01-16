@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ballSpeedText;
     public TextMeshProUGUI helpText;
     public TextMeshProUGUI torqueSpeedText;
+    public GameObject bowlingSpeedIcon;
     public GameObject[] spinUI;
     private float t=0;
     public float tBar=0;
@@ -54,6 +55,7 @@ public class UIManager : MonoBehaviour
         
         ballSpeedText.enabled = false;
         torqueSpeedText.enabled=false;
+        bowlingSpeedIcon.SetActive(false);
 
         helpText.outlineColor = Color.black;
         helpText.outlineWidth = 0.15f;
@@ -86,6 +88,7 @@ public class UIManager : MonoBehaviour
     {
         velocityBar.SetActive(true);
         velocityBarOutline.SetActive(true);
+        bowlingSpeedIcon.SetActive(true);
 
         //change rectangle height
         rect.sizeDelta = new (100, Mathf.Lerp(minY,maxY,tBar));

@@ -166,6 +166,7 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
+        UIManagerScript.bowlingSpeedIcon.SetActive(false);
 
         //reset UI spin gauge variable
         UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
@@ -262,6 +263,7 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript.maxY = UIManagerScript.maxYFixed;
         UIManagerScript.minY = UIManagerScript.minYFixed;
         UIManagerScript.stopMovingVelocityBar = false;
+        UIManagerScript.bowlingSpeedIcon.SetActive(false);
 
         //reset UI spin gauge variable
         UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
